@@ -13,17 +13,31 @@ def spin_wheel(roulette_game):
     print(f"Result: Number - {result_number}, Color - {result_color}")
     return result_number, result_color
 
+def get_bet_type_and_number():
+    while True:
+        bet_type = input("Enter bet type (red, black, even, odd, number): ").lower()
+        if bet_type == "number":
+            try:
+                bet_number = int(input("Enter bet number (1-36): "))
+                if 1 <= bet_number <= 36:
+                    return bet_type, bet_number
+                else:
+                    print("Invalid bet number. Please choose a number between 1 and 36.")
+            except ValueError:
+                print("Invalid input. Please enter a valid number.")
+        elif bet_type.isdigit() and 1 <= int(bet_type) <= 36:
+            return "number", int(bet_type)
+        elif bet_type in ["red", "black", "even", "odd"]:
+            return bet_type, None
+        else:
+            print("Invalid bet type. Please choose from: red, black, even, odd, number.")
+
 def play_roulette(session, player):
     print("Welcome to the Roulette Table!")
     while True:
         print("\nPlace your bet:")
         bet_amount = int(input("Enter bet amount: "))
-        bet_type = input("Enter bet type (red, black, even, odd, number): ")
-
-        if bet_type.lower() == "number":
-            bet_number = int(input("Enter bet number (1-36): "))
-        else:
-            bet_number = None
+        bet_type, bet_number = get_bet_type_and_number()
 
         roulette_game = create_game(session, player, bet_amount, bet_type, bet_number)
 
@@ -36,7 +50,6 @@ def play_roulette(session, player):
         if play_again != "yes":
             print("Exiting the roulette table.")
             break
-
 
 def main():
     Base.metadata.create_all(engine)

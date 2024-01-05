@@ -32,27 +32,25 @@ class Game(Base):
         return self.result_number, self.result_color
 
     def calculate_payout(self):
-        if self.bet_type in ["red", "black", "even", "odd"]:
-            if hasattr(self, "bet_number"):
-                print("Invalid combination of bet type and bet number.")
-
-            if self.bet_type in ["red", "black", "even", "odd"]:
-                if self.result_color == self.bet_type:
-                    payout_ratio = 2
-                    winnings = self.bet_amount * payout_ratio
-                    self.player.balance += winnings
-                    print(f"Congratulations! You won {winnings} chips :).")
-                else:
-                    print("Sorry, you lost :(.")
-            elif 1 <= self.bet_number <= 36:
-                if self.result_number == self.bet_number:
-                    payout_ratio = 36
-                    winnings = self.bet_amount * payout_ratio
-                    self.player.balance += winnings
-                    print(f"Congratulations! You won {winnings} chips.")
-                else:
-                    print("Oh no!! You lost </3.")
+        if self.bet_type == "number":
+            if not (1 <= self.bet_number <= 36):
+                print("Invalid bet number. Please choose a number between 1 and 36.")
+                return
+            if self.result_number == self.bet_number:
+                payout_ratio = 36
+                winnings = self.bet_amount * payout_ratio
+                self.player.balance += winnings
+                print(f"Congratulations! You won {winnings} chips.")
             else:
-                print("Invalid bet type or bet number. No payout calculated.")
+                print("Oh no!! You lost </3.")
+        elif self.bet_type in ["red", "black", "even", "odd"]:
+            if self.result_color == self.bet_type:
+                payout_ratio = 2
+                winnings = self.bet_amount * payout_ratio
+                self.player.balance += winnings
+                print(f"Congratulations! You won {winnings} chips :).")
+            else:
+                print("Sorry, you lost :(.")
         else:
-            print("Invalid bet type. Please choose from: red, black, even, odd.")
+            print("Invalid combination of bet type and bet number.")
+    
