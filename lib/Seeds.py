@@ -27,6 +27,12 @@ def seed_data():
     with Session(engine) as session:
         pass
 
+def create_game(session, user_id, bet_amount, bet_type, result_number, result_color):
+    game = Game(user_id=user_id, bet_amount=bet_amount, bet_type=bet_type, result_number=result_number, result_color=result_color)
+    session.add(game)
+    session.commit()
+    return game
+
 if __name__ == "__main__":
     
     seed_data()

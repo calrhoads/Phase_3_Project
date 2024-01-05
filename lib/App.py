@@ -1,38 +1,19 @@
 from sqlalchemy.orm import Session
-from Models import Player, Game, engine, Base
+from Models import *
 from Seeds import create_player, read_player, update_player_balance, delete_player, seed_data
 
-def create_game(session, player, bet_amount, bet_type, bet_number=None):
-    game = Game(player=player, bet_amount=bet_amount, bet_type=bet_type, bet_number=bet_number)
-    session.add(game)
+def create_game(session, player, bet_amount, bet_type):
+    print("attempting to create game")
+    roulette_game = Game(player = player, bet_amount = bet_amount, bet_type = bet_type)
+    print("roulettegame created")
+    session.add(roulette_game)
     session.commit()
-    return game
+    return roulette_game
 
-def spin_wheel(game):
-    result_number, result_color = game.spin_wheel()
+def spin_wheel(roulette_game):
+    result_number, result_color = roulette_game.spin_wheel()
     print(f"Result: Number - {result_number}, Color - {result_color}")
     return result_number, result_color
-
-def calculate_payout(self):
-    if self.bet_type == "color":      
-            if self.result_color == self.bet_number:
-                payout_ratio = 2  
-                winnings = self.bet_amount * payout_ratio
-                self.player.balance += winnings
-                print(f"Congratulations! You won {winnings} chips :).")
-            else:
-                print("Sorry, you lost :(.")
-    elif self.bet_type == "number":
-        if self.result_number == self.bet_number:
-            payout_ratio = 36  
-            winnings = self.bet_amount * payout_ratio
-            self.player.balance += winnings
-            print(f"Congratulations! You won {winnings} chips.")
-        else:
-            print("Oh no!! You lost </3.")
-
-    else:
-        print("Invalid bet type :( no payout calculated.")
 
 def main():
     Base.metadata.create_all(engine)
@@ -85,12 +66,13 @@ def main():
         elif choice == "5":
             player_id = int(input("Enter player ID: "))
             bet_amount = int(input("Enter bet amount: "))
-            bet_type = input("Enter bet type (e.g., color, number): ")
-            bet_number = int(input("Enter bet number (if applicable): "))
+            bet_type = input("Enter bet type (color, number): ")
+            # bet_number = int(input("Enter bet number (if applicable): "))
             with Session(engine) as session:
                 player = read_player(session, player_id)
+                print("Session established, entering if check")
                 if player:
-                    create_game(session, player, bet_amount, bet_type, bet_number)
+                    create_game(session, player, bet_amount, bet_type)
                     print("Game created successfully.")
                 else:
                     print("Player not found.")
@@ -98,10 +80,10 @@ def main():
         elif choice == "6":
             game_id = int(input("Enter game ID: "))
             with Session(engine) as session:
-                game = session.query(Game).get(game_id)
-                if game:
-                    spin_wheel(game)
-                    calculate_payout(game)
+                roulette_game = session.query(Game).get(game_id)
+                if roulette_game:
+                    spin_wheel(roulette_game)
+                    roulette_game.calculate_payout()
                 else:
                     print("Game not found.")
 
@@ -114,3 +96,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
