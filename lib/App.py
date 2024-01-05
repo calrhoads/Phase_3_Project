@@ -10,7 +10,7 @@ def create_game(session, player, bet_amount, bet_type, bet_number=None):
 
 def spin_wheel(roulette_game):
     result_number, result_color = roulette_game.spin_wheel()
-    print(f"Result: Number - {result_number}, Color - {result_color}")
+    # print(f"Result: Number - {result_number}, Color - {result_color}")
     return result_number, result_color
 
 def get_bet_type_and_number():
